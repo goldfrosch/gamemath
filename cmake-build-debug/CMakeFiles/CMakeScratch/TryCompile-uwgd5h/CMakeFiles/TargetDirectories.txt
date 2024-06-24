@@ -1,0 +1,3 @@
+C:/Users/user/Github/gamemath/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-uwgd5h/CMakeFiles/cmTC_7a2e2.dir
+C:/Users/user/Github/gamemath/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-uwgd5h/CMakeFiles/edit_cache.dir
+C:/Users/user/Github/gamemath/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-uwgd5h/CMakeFiles/rebuild_cache.dir
