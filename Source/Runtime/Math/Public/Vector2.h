@@ -6,12 +6,12 @@ namespace CK
 struct Vector2
 {
 public:
-	// »ı¼ºÀÚ 
+	// ìƒì„±ì
 	FORCEINLINE constexpr Vector2() = default;
 	FORCEINLINE explicit constexpr Vector2(int InX, int InY) : X((float)InX), Y((float)InY) { }
 	FORCEINLINE explicit constexpr Vector2(float InX, float InY) : X(InX), Y(InY) { }
 
-	// ¿¬»êÀÚ 
+	// ì—°ì‚°ì
 	FORCEINLINE constexpr float operator[](BYTE InIndex) const;
 	FORCEINLINE constexpr float& operator[](BYTE InIndex);
 	FORCEINLINE constexpr Vector2 operator-() const;
@@ -25,7 +25,7 @@ public:
 	FORCEINLINE constexpr Vector2& operator+=(const Vector2& InVector);
 	FORCEINLINE constexpr Vector2& operator-=(const Vector2& InVector);
 
-	// ¸â¹öÇÔ¼ö 
+	// ë©¤ë²„í•¨ìˆ˜
 	FORCEINLINE float Size() const;
 	FORCEINLINE constexpr float SizeSquared() const;
 	void Normalize();
@@ -40,14 +40,15 @@ public:
 
 	std::string ToString() const;
 
-	// Á¤Àû¸â¹öº¯¼ö 
+	// ì •ì  ë©¤ë²„ ë³€ìˆ˜
 	static const Vector2 UnitX;
 	static const Vector2 UnitY;
 	static const Vector2 One;
 	static const Vector2 Zero;
+	static const Vector2 MOne;
 	static constexpr BYTE Dimension = 2;
 
-	// ¸â¹öº¯¼ö
+	// ë©¤ë²„ ë³€ìˆ˜
 	union
 	{
 		struct
@@ -177,7 +178,6 @@ FORCEINLINE Vector2 Vector2::ToPolarCoordinate() const
 
 FORCEINLINE constexpr Vector2 Vector2::ToCartesianCoordinate() const
 {
-	// ±ØÁÂÇ¥°è¿¡¼­ X´Â ¹İÁö¸§, Y´Â °¢(rad)À¸·Î È°¿ë
 	float sin = 0.f, cos = 0.f;
 	Math::GetSinCosRad(sin, cos, Y);
 	return Vector2(X * cos, X * sin);

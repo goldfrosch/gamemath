@@ -2,26 +2,24 @@
 #include "Precompiled.h"
 #include "SoftRenderer.h"
 #include <random>
+#include <math.h>
+
 using namespace CK::DD;
 
-// °İÀÚ¸¦ ±×¸®´Â ÇÔ¼ö
+// ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 void SoftRenderer::DrawGizmo2D()
 {
 	auto& r = GetRenderer();
 	const auto& g = Get2DGameEngine();
 
-	// ±×¸®µå »ö»ó
 	LinearColor gridColor(LinearColor(0.8f, 0.8f, 0.8f, 0.3f));
 
-	// ºäÀÇ ¿µ¿ª °è»ê
 	Vector2 viewPos = g.GetMainCamera().GetTransform().GetPosition();
 	Vector2 extent = Vector2(_ScreenSize.X * 0.5f, _ScreenSize.Y * 0.5f);
 
-	// ÁÂÃø ÇÏ´Ü¿¡¼­ºÎÅÍ °İÀÚ ±×¸®±â
 	int xGridCount = _ScreenSize.X / _Grid2DUnit;
 	int yGridCount = _ScreenSize.Y / _Grid2DUnit;
 
-	// ±×¸®µå°¡ ½ÃÀÛµÇ´Â ÁÂÇÏ´Ü ÁÂÇ¥ °ª °è»ê
 	Vector2 minPos = viewPos - extent;
 	Vector2 minGridPos = Vector2(ceilf(minPos.X / (float)_Grid2DUnit), ceilf(minPos.Y / (float)_Grid2DUnit)) * (float)_Grid2DUnit;
 	ScreenPoint gridBottomLeft = ScreenPoint::ToScreenCoordinate(_ScreenSize, minGridPos - viewPos);
@@ -41,51 +39,94 @@ void SoftRenderer::DrawGizmo2D()
 	r.DrawFullVerticalLine(worldOrigin.X, LinearColor::Green);
 }
 
-// °ÔÀÓ ¿ÀºêÁ§Æ® ¸ñ·Ï
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½
 
 
-// ÃÖÃÊ ¾À ·ÎµùÀ» ´ã´çÇÏ´Â ÇÔ¼ö
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½
 void SoftRenderer::LoadScene2D()
 {
-	// ÃÖÃÊ ¾À ·Îµù¿¡¼­ »ç¿ëÇÏ´Â ¸ğµâ ³» ÁÖ¿ä ·¹ÆÛ·±½º
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö¿ï¿½ ï¿½ï¿½ï¿½Û·ï¿½ï¿½ï¿½
 	auto& g = Get2DGameEngine();
 
 }
 
-// °ÔÀÓ ·ÎÁ÷°ú ·»´õ¸µ ·ÎÁ÷ÀÌ °øÀ¯ÇÏ´Â º¯¼ö
+// ê²Œì„ ë¡œì§ê³¼ ë Œë”ë§ ë¡œì§ ê³µìœ í•˜ëŠ” ë³€ìˆ˜ ì˜ì—­
+Vector2 currentPosition(0.f, 0.f);
 
 
-// °ÔÀÓ ·ÎÁ÷À» ´ã´çÇÏ´Â ÇÔ¼ö
+// ê²Œì„ ë¡œì§ ë‹´ë‹¹ í•¨ìˆ˜
 void SoftRenderer::Update2D(float InDeltaSeconds)
 {
-	// °ÔÀÓ ·ÎÁ÷¿¡¼­ »ç¿ëÇÏ´Â ¸ğµâ ³» ÁÖ¿ä ·¹ÆÛ·±½º
+	// ê²Œì„ ë¡œì§ì—ì„œ ì‚¬ìš©í•˜ëŠ” ëª¨ë“ˆ ë‚´ ì£¼ìš” ë ˆí¼ëŸ°ìŠ¤
 	auto& g = Get2DGameEngine();
 	const InputManager& input = g.GetInputManager();
 
-	// °ÔÀÓ ·ÎÁ÷ÀÇ ·ÎÄÃ º¯¼ö
+	// ê²Œì„ ë¡œì§ ë¡œì»¬ ë³€ìˆ˜
+	static float moveSpeed = 10.f;
 
+	// í•¨ìˆ˜ë¡œ ì²˜ë¦¬í–ˆì§€ë§Œ ì‚¬ì‹¤ enum ê¸°ë°˜ìœ¼ë¡œ në²ˆì§¸ ë°°ì—´ ê°’ì„ ê°€ì ¸ì˜¤ëŠ” ì‘ì—…
+	Vector2 inputVector = Vector2(input.GetAxis(InputAxis::XAxis), input.GetAxis(InputAxis::YAxis)).GetNormalize();
+	Vector2 deltaPos = inputVector * moveSpeed * InDeltaSeconds;
+
+	currentPosition += deltaPos;
 }
 
-// ·»´õ¸µ ·ÎÁ÷À» ´ã´çÇÏ´Â ÇÔ¼ö
+void SoftRenderer::DrawCrossPoint(RendererInterface& Render, const Vector2 pos, const LinearColor color) {
+	Render.DrawPoint(currentPosition, color);
+	Render.DrawPoint(currentPosition + Vector2::UnitX, color);
+	Render.DrawPoint(currentPosition - Vector2::UnitX, color);
+	Render.DrawPoint(currentPosition + Vector2::UnitY, color);
+	Render.DrawPoint(currentPosition - Vector2::UnitY, color);
+}
+
+// ë Œë”ë§ ë¡œì§ ë‹´ë‹¹ í•¨ìˆ˜
 void SoftRenderer::Render2D()
 {
-	// ·»´õ¸µ ·ÎÁ÷¿¡¼­ »ç¿ëÇÏ´Â ¸ğµâ ³» ÁÖ¿ä ·¹ÆÛ·±½º
+	// ë Œë”ë§ ë¡œì§ì—ì„œ ì‚¬ìš©í•˜ëŠ” ëª¨ë“ˆ ë‚´ ì£¼ìš” ë ˆí¼ëŸ°ìŠ¤
 	auto& r = GetRenderer();
 	const auto& g = Get2DGameEngine();
 
-	// ¹è°æ¿¡ °İÀÚ ±×¸®±â
+	// ë°°ê²½ ê²©ì ê·¸ë¦¬ê¸°
 	DrawGizmo2D();
 
-	// ·»´õ¸µ ·ÎÁ÷ÀÇ ·ÎÄÃ º¯¼ö
+	// ë Œë”ë§ ë¡œì»¬ ë³€ìˆ˜
 
+	// ì„  ê·¸ë¦¬ê¸°
+	// static float lineLen = 500.f;
+	// Vector2 lineStart = currentPosition * lineLen;
+	// Vector2 lineEnd = currentPosition * -lineLen;
+	// r.DrawLine(lineStart, lineEnd, LinearColor::LightGray);
+
+	// DrawCrossPoint(r, currentPosition, LinearColor::Blue);
+
+	// ì› ê·¸ë¦¬ê¸°
+	static float radius = 100.f;
+	static std::vector<Vector2> circles;
+
+	if (circles.empty()) {
+		for (float x = -radius; x <= radius; ++x) {
+			for (float y = -radius; y <= radius; ++y) {
+				Vector2 pointToTest = Vector2(x, y);
+				float squareLen = pointToTest.SizeSquared();
+				if (squareLen <= pow(radius, 2))
+					circles.push_back(pointToTest);
+			}
+		}
+	}
+
+	for (const auto& v : circles) {
+		r.DrawPoint(v + currentPosition, LinearColor::Red);
+	}
+
+	r.PushStatisticText("Coord: " + currentPosition.ToString());
 }
 
-// ¸Ş½Ã¸¦ ±×¸®´Â ÇÔ¼ö
+// ï¿½Ş½Ã¸ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 void SoftRenderer::DrawMesh2D(const class DD::Mesh& InMesh, const Matrix3x3& InMatrix, const LinearColor& InColor)
 {
 }
 
-// »ï°¢ÇüÀ» ±×¸®´Â ÇÔ¼ö
+// ï¿½ï°¢ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 void SoftRenderer::DrawTriangle2D(std::vector<DD::Vertex2D>& InVertices, const LinearColor& InColor, FillMode InFillMode)
 {
 }

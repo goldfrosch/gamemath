@@ -43,54 +43,55 @@ FORCEINLINE bool operator&(FillMode InLhs, FillMode InRhs)
 class SoftRenderer
 {
 public:
-	// »ý¼ºÀÚ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	SoftRenderer(GameEngineType InGameEngineType, RendererInterface* InRSI);
 
-	// À©µµ¿ì ÀÌº¥Æ® Ã³¸®
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® Ã³ï¿½ï¿½
 	void OnTick();
 	void OnResize(const ScreenPoint& InNewScreenSize);
 	void OnShutdown();
 
-	// ÇÁ·Î±×·¥ ±âº» Á¤º¸
+	// ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
 	SystemInputManager& GetSystemInput() { return _SystemInputManager; }
 	const ScreenPoint& GetScreenSize() { return _ScreenSize; }
 	float GetFrameFPS() const { return _FrameFPS; }
 	FORCEINLINE float GetElapsedTime() const { return _ElapsedTime; }
 
-	// ¼º´É ÃøÁ¤
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	std::function<float()> _PerformanceInitFunc;
 	std::function<INT64()> _PerformanceMeasureFunc;
 	std::function<void(InputManager&)> _InputBindingFunc;
 
-	// °ÔÀÓ ¿£Áø ·¹ÆÛ·±½º 
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û·ï¿½ï¿½ï¿½ 
 	FORCEINLINE EngineInterface& GetGameEngine() { return (_GameEngineType == GameEngineType::DD) ? static_cast<EngineInterface&>(_GameEngine2) : static_cast<EngineInterface&>(_GameEngine3); }
 	FORCEINLINE DD::GameEngine& Get2DGameEngine() { return _GameEngine2; }
 	FORCEINLINE DDD::GameEngine& Get3DGameEngine() { return _GameEngine3; }
 
 private:
-	// °ÔÀÓ ¿£Áø ¼³Á¤
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void SetDefaultGameEngine(GameEngineType InGameEngineType);
 
-	// ±âº» ·çÇÁ ÇÔ¼ö
+	// ï¿½âº» ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	void PreUpdate();
 	void PostUpdate();
 
-	// ·»´õ·¯ ·¹ÆÛ·±½º
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û·ï¿½ï¿½ï¿½
 	FORCEINLINE RendererInterface& GetRenderer() { return *_RSIPtr.get(); }
 	FORCEINLINE void SetBackgroundColor(const LinearColor& InLinearColor) { _BackgroundColor = InLinearColor; }
 	FORCEINLINE void SetWireframeColor(const LinearColor& InLinearColor) { _WireframeColor = InLinearColor; }
 
-	// 2D ±×·¡ÇÈ½º ±¸Çö
+	// 2D ï¿½×·ï¿½ï¿½È½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void LoadScene2D();
 	void Update2D(float InDeltaSeconds);
 	void Render2D();
+	void DrawCrossPoint(RendererInterface& Render, const Vector2 pos, const LinearColor color);
 	void DrawGizmo2D();
 	void DrawMesh2D(const class DD::Mesh& InMesh, const Matrix3x3& InMatrix, const LinearColor& InColor);
 	void DrawTriangle2D(std::vector<DD::Vertex2D>& InVertices, const LinearColor& InColor, FillMode InFillMode);
 
 	int _Grid2DUnit = 10;
 
-	// 3D ±×·¡ÇÈ½º ±¸Çö
+	// 3D ï¿½×·ï¿½ï¿½È½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void LoadScene3D();
 	void Update3D(float InDeltaSeconds);
 	void LateUpdate3D(float InDeltaSeconds);
@@ -109,23 +110,23 @@ private:
 	DrawMode _CurrentDrawMode = DrawMode::Normal;
 
 private:
-	// ÃÊ±âÈ­ Á¡°Ë º¯¼ö
+	// ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	bool _PerformanceCheckInitialized = false;
 	bool _RendererInitialized = false;
 	bool _GameEngineInitialized = false;
 	bool _TickEnabled = false;
 	bool _AllInitialized = false;
 
-	// È­¸é Å©±â
+	// È­ï¿½ï¿½ Å©ï¿½ï¿½
 	ScreenPoint _ScreenSize;
 
-	// ¹è°æ »ö»ó
+	// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	LinearColor _BackgroundColor = LinearColor::WhiteSmoke;
 
-	// ¿ÍÀÌ¾îÇÁ·¹ÀÓ »ö»ó
+	// ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	LinearColor _WireframeColor = LinearColor::DimGray;
 
-	// ¼º´É ÃøÁ¤
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	long long _StartTimeStamp = 0;
 	long long _FrameTimeStamp = 0;
 	long _FrameCount = 0;
@@ -135,14 +136,14 @@ private:
 	float _AverageFPS = 0.f;
 	float _FrameFPS = 0.f;
 
-	// ·»´õ·¯ ÀÎÅÍÆäÀÌ½º
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½
 	std::unique_ptr<RendererInterface> _RSIPtr;
 	GameEngineType _GameEngineType = GameEngineType::DD;
 
-	// °ÔÀÓ ¿£Áø
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	DD::GameEngine _GameEngine2;
 	DDD::GameEngine _GameEngine3;
 
-	// ÀÀ¿ë ÇÁ·Î±×·¥ ÀÔ·Â
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½Ô·ï¿½
 	SystemInputManager _SystemInputManager;
 };
